@@ -30,10 +30,11 @@ abstract class RoxieViewModel<A : BaseAction, S : BaseState, C : BaseChange>() :
 
     val stateFlow: Flow<S> = _stateFlow
 
-    protected fun startActionsObserver() = viewModelScope.launch {
+    protected fun startActionsObserver() {
         changes.scan(initialState, reducer)
             .distinctUntilChanged()
-            .collect { _stateFlow.emit(it) }
+            .onEach { _stateFlow.emit(it) }
+            .launchIn(viewModelScope)
 
     }
 
@@ -41,10 +42,9 @@ abstract class RoxieViewModel<A : BaseAction, S : BaseState, C : BaseChange>() :
      * Dispatches an action. This is the only way to trigger a viewState change.
      */
     fun dispatch(action: A) {
-        viewModelScope.launch {
-            emitAction(action)
-                .collect { changes.emit(it) }
-        }
+        emitAction(action)
+            .onEach { changes.emit(it) }
+            .launchIn(viewModelScope)
     }
 
     protected abstract fun emitAction(action: A): Flow<C>
