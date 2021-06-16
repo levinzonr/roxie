@@ -8,16 +8,19 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import cz.levinzonr.roxie.sample.screens.NoteListViewModel
+import cz.levinzonr.roxie.sample.screens.NotesScreen
 import cz.levinzonr.roxie.sample.ui.theme.RoxieTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val viewModel = NoteListViewModel()
         super.onCreate(savedInstanceState)
         setContent {
             RoxieTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                   NotesScreen(viewModel = viewModel)
                 }
             }
         }
