@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
+    id("maven-publish")
+
 }
 
 android {
@@ -30,6 +32,19 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            this.create("release", MavenPublication::class) {
+                from(components.getByName("release"))
+                groupId = "cz.levinzonr"
+                artifactId = "roxie-coroutines"
+                version = "1.5"
+            }
+        }
     }
 }
 
